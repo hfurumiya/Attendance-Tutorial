@@ -9,6 +9,9 @@ class User < ApplicationRecord
   validates :email, presence: true, length: {maximum: 100},
                     format: { with: VALID_EMAIL_REGEX },
                     uniqueness: true
+  validates :department, length: { in: 2..50 }, allow_blank: true
+  validates :basic_time, presence: true
+  validates :work_time, presence: true
   has_secure_password
   validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
   
@@ -29,10 +32,10 @@ class User < ApplicationRecord
   end
   
   # 永続セッションのためハッシュ化したトークンをデータベースに記憶します
-  def remember_token
+  # def remember_token
+  def remember
     self.remember_token = User.new_token
-    update_attribute(:remember_digest, User.digest(remember_token
-    ))
+    update_attribute(:remember_digest, User.digest(remember_token))
   end
   
   # トークンがダイジェストと一致すればtrueを返します
